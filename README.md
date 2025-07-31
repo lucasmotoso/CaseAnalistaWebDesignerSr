@@ -1,70 +1,75 @@
 
-# 💼 Case: Analista Web Designer Sênior — Porto Seguro
+# 💼 Projeto: Interface de Listagem de Usuários com API Pública
 
-Projeto front-end responsivo desenvolvido como case técnico para a vaga de **Analista Web Designer Sênior** na Triggo Labs / Porto Seguro.
-
-Este projeto simula uma interface completa de listagem de usuários a partir de uma API pública, com foco em performance, acessibilidade, design refinado e usabilidade prática para marketing digital.
+Projeto front-end responsivo que apresenta uma interface moderna de listagem de usuários com dados de uma API pública.  
+A proposta foca em boas práticas de desenvolvimento, responsividade, performance, acessibilidade e refinamento visual, com aplicações voltadas a marketing digital, CRM e experiências interativas.
 
 ---
 
 ## ✨ Funcionalidades
 
-- 🔍 **Filtros combinados** por nome, cidade e empresa
-- 🌙 **Modo claro/escuro** com persistência (localStorage)
-- ⭐ **Favoritar usuários** com feedback visual e persistência
-- 📄 **Exportação** da lista para:
-  - **CSV** (compatível com Excel)
-  - **PDF** com formatação tabular
-- 💬 **Modal** com detalhes completos do usuário
-- ⚙️ **Responsividade total** (mobile-first design)
-- 🎨 **Design refinado** com gradientes, ícones e animações
+- 🔍 Filtros combinados por nome, cidade e empresa
+- 🌙 Modo claro/escuro com salvamento de preferência
+- ⭐ Marcação de usuários como favoritos (armazenados localmente)
+- 📄 Exportação da lista para:
+  - CSV (compatível com Excel)
+  - PDF formatado
+- 💬 Modal com detalhes individuais do usuário
+- ⚙️ Layout 100% responsivo e estilizado
 
 ---
 
-## 🛠️ Tecnologias e ferramentas
+## 🛠️ Tecnologias utilizadas
 
 - **HTML5**, **CSS3**, **JavaScript**
 - **Bootstrap 5** + **Bootstrap Icons**
 - **Google Fonts (Poppins)**
 - **jsPDF + autoTable** para geração de PDF
-- **LocalStorage API** para salvar favoritos e preferências de tema
+- **LocalStorage API** para persistência de favoritos e tema
 
 ---
 
 ## 🧠 Sobre a API utilizada
 
-Este projeto consome dados da [JSONPlaceholder](https://jsonplaceholder.typicode.com/users), uma API REST pública com dados mockados para simulações e testes front-end.
+Este projeto consome dados da [JSONPlaceholder](https://jsonplaceholder.typicode.com/users), uma API REST pública com dados simulados para fins de desenvolvimento front-end.
 
 ---
 
-## 📷 Screenshot
+## 🖼️ Interface do Projeto
 
-![Interface do projeto](https://user-images.githubusercontent.com/your-image-path-here.png)
+> Substitua abaixo pela sua imagem ou screenshot se desejar:
 
-> *Dica: você pode substituir essa imagem pelo print do seu projeto publicado ou rodando localmente.*
+```markdown
+![Interface do projeto](screenshot-case-lucas.png)
+```
 
 ---
 
-## 🚀 Como testar localmente
+## 🚀 Como rodar localmente
 
-1. Clone este repositório
+1. Clone este repositório:
 ```bash
 git clone https://github.com/lucasmotoso/CaseAnalistaWebDesignerSr.git
 ```
 
-2. Abra o arquivo `index.html` no navegador
-3. Explore as funcionalidades e filtros
-4. Alternativamente, use Live Server no VSCode
+2. Abra o arquivo `index.html` em seu navegador ou use o Live Server no VSCode.
+
+---
+
+## 🌐 Acesse online
+
+Disponível via GitHub Pages:  
+📎 [lucasmotoso.github.io/CaseAnalistaWebDesignerSr](https://lucasmotoso.github.io/CaseAnalistaWebDesignerSr)
 
 ---
 
 ## 👤 Autor
 
 **Lucas Motoso**  
-[LinkedIn](https://www.linkedin.com/in/lucas-motoso) • [GitHub](https://github.com/lucasmotoso)
+[LinkedIn](https://www.linkedin.com/in/lucasmotoso) • [GitHub](https://github.com/lucasmotoso)
 
 ---
 
 ## 📝 Licença
 
-Uso livre para fins de estudo e demonstração profissional.
+Uso livre para fins de estudo, portfólio e demonstração profissional.
