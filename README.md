@@ -61,7 +61,7 @@ git clone https://github.com/lucasmotoso/CaseAnalistaWebDesignerSr.git
 ## 👤 Autor
 
 **Lucas Motoso**  
-[LinkedIn](https://www.linkedin.com/in/lucasmotoso) • [GitHub](https://github.com/lucasmotoso)
+[LinkedIn](https://www.linkedin.com/in/lucas-motoso) • [GitHub](https://github.com/lucasmotoso)
 
 ---
 
