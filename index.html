@@ -1,167 +1,254 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="light">
 <head>
   <meta charset="UTF-8">
-  <title>Usuários da API</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usuários - Visual Refinado</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- No <head> adicione Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Sugestões tipo autocomplete */
-    #sugestoes {
-      position: absolute;
-      width: 100%;
-      z-index: 1000;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-top: none;
-      max-height: 200px;
-      overflow-y: auto;
+    body {
+      font-family: 'Poppins', sans-serif;
     }
-
-    #sugestoes div {
-      padding: 8px;
+    header {
+      background: linear-gradient(90deg, #0077b6, #00b4d8);
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      border-bottom: 4px solid #0096c7;
+    }
+    header h1 {
+      font-weight: 600;
+    }
+    .btn-custom {
+      border-radius: 50px;
+      font-weight: 500;
+    }
+    .card {
+      border: none;
+      border-radius: 16px;
+      transition: all 0.3s ease-in-out;
+    }
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .card-title {
+      font-weight: 600;
+    }
+    .card-footer {
+      font-size: 0.8rem;
+    }
+    .bi-star, .bi-star-fill {
+      font-size: 1.3rem;
       cursor: pointer;
+      transition: color 0.3s;
     }
-
-    #sugestoes div:hover {
-      background-color: #f1f1f1;
+    .modal-header {
+      background-color: #0077b6;
+      color: white;
+    }
+    .theme-dark header {
+      background: linear-gradient(90deg, #03045e, #023e8a);
+      border-color: #0077b6;
+    }
+    .theme-dark body, .theme-dark .modal-content {
+      background-color: #121212 !important;
+      color: #e0e0e0;
     }
   </style>
 </head>
 <body class="bg-light">
 
-  <div class="container py-5">
-    <h1 class="text-center mb-4">Lista de Usuários</h1>
+  <header>
+    <h1>Case: Usuários da API</h1>
+    <p class="mb-0">Filtro, Favoritos, Dark Mode, Exportação e mais!</p>
+  </header>
 
-    <!-- Campo de busca + sugestões -->
-    <div class="row mb-4 position-relative">
-      <div class="col-md-6 offset-md-3">
-        <input type="text" id="filtro-nome" class="form-control" placeholder="Buscar por nome...">
-        <div id="sugestoes" class="border rounded d-none"></div>
+  <div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-outline-dark btn-custom" id="toggle-theme">
+          <i class="bi bi-moon-stars-fill"></i> Modo Escuro
+        </button>
+        <button class="btn btn-outline-success btn-custom" onclick="exportarCSV()">
+          <i class="bi bi-filetype-csv"></i> CSV
+        </button>
+        <button class="btn btn-outline-danger btn-custom" onclick="exportarPDF()">
+          <i class="bi bi-file-earmark-pdf"></i> PDF
+        </button>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <input id="filtro-nome" class="form-control" placeholder="Filtrar por nome">
+        <input id="filtro-cidade" class="form-control" placeholder="Filtrar por cidade">
+        <input id="filtro-empresa" class="form-control" placeholder="Filtrar por empresa">
       </div>
     </div>
 
-    <!-- Lista de usuários -->
-    <div id="user-list" class="row g-4 justify-content-center">
-      <!-- Cards vão aqui -->
+    <div id="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
+      </div>
     </div>
+
+    <div id="user-list" class="row g-4 d-none"></div>
   </div>
 
-  <!-- Modal para detalhes -->
-  <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="userModalLabel">Detalhes do Usuário</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          <h5 class="modal-title">Detalhes do Usuário</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body">
-          <div id="modalContent"></div>
-        </div>
+        <div class="modal-body" id="modalContent"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   <script>
+    const html = document.documentElement;
+    const body = document.body;
+    const btnTheme = document.getElementById('toggle-theme');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-bs-theme', savedTheme);
+    if (savedTheme === 'dark') body.classList.add('theme-dark');
+
+    btnTheme.addEventListener('click', () => {
+      const current = html.getAttribute('data-bs-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-bs-theme', next);
+      localStorage.setItem('theme', next);
+      body.classList.toggle('theme-dark');
+    });
+
     let todosUsuarios = [];
 
-    // Buscar usuários da API
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(res => res.json())
       .then(data => {
         todosUsuarios = data;
-        renderizarUsuarios(todosUsuarios);
+        document.getElementById('loading').classList.add('d-none');
+        document.getElementById('user-list').classList.remove('d-none');
+        aplicarFiltros();
       });
 
-    // Renderizar cards
+    function getFavoritos() {
+      return JSON.parse(localStorage.getItem('favoritos')) || [];
+    }
+
+    function toggleFavorito(id) {
+      let favs = getFavoritos();
+      favs.includes(id) ? favs = favs.filter(f => f !== id) : favs.push(id);
+      localStorage.setItem('favoritos', JSON.stringify(favs));
+      aplicarFiltros();
+    }
+
     function renderizarUsuarios(lista) {
       const container = document.getElementById('user-list');
       container.innerHTML = '';
+      const favs = getFavoritos();
 
-      lista.forEach(usuario => {
-        const col = document.createElement('div');
-        col.className = 'col-md-4';
-
-        col.innerHTML = `
+      lista.forEach(u => {
+        const card = document.createElement('div');
+        card.className = 'col-12 col-md-6 col-lg-4';
+        const isFav = favs.includes(u.id);
+        const estrela = isFav ? 'bi-star-fill text-warning' : 'bi-star text-secondary';
+        card.innerHTML = `
           <div class="card shadow-sm h-100">
             <div class="card-body">
-              <h5 class="card-title">${usuario.name}</h5>
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title">${u.name}</h5>
+                <i class="bi ${estrela}" onclick="toggleFavorito(${u.id})" title="Favoritar"></i>
+              </div>
               <p class="card-text">
-                <strong>Email:</strong> ${usuario.email}<br>
-                <strong>Cidade:</strong> ${usuario.address.city}
+                <strong>Email:</strong> ${u.email}<br>
+                <strong>Cidade:</strong> ${u.address.city}<br>
+                <strong>Empresa:</strong> ${u.company.name}
               </p>
               <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal"
-                onclick='exibirDetalhes(${JSON.stringify(usuario).replace(/'/g, "\\'")})'>
+                onclick='exibirDetalhes(${JSON.stringify(u).replace(/'/g, "\'")})'>
                 Ver detalhes
               </button>
             </div>
-            <div class="card-footer text-muted text-end">ID: ${usuario.id}</div>
+            <div class="card-footer text-muted text-end">ID: ${u.id}</div>
           </div>
         `;
-
-        container.appendChild(col);
+        container.appendChild(card);
       });
     }
 
-    // Buscar por nome com sugestões
-    const inputBusca = document.getElementById('filtro-nome');
-    const sugestoesBox = document.getElementById('sugestoes');
-
-    inputBusca.addEventListener('input', () => {
-      const termo = inputBusca.value.toLowerCase();
-      const filtrados = todosUsuarios.filter(u => u.name.toLowerCase().includes(termo));
-
+    function aplicarFiltros() {
+      const nome = document.getElementById('filtro-nome').value.toLowerCase();
+      const cidade = document.getElementById('filtro-cidade').value.toLowerCase();
+      const empresa = document.getElementById('filtro-empresa').value.toLowerCase();
+      const filtrados = todosUsuarios.filter(u =>
+        u.name.toLowerCase().includes(nome) &&
+        u.address.city.toLowerCase().includes(cidade) &&
+        u.company.name.toLowerCase().includes(empresa)
+      );
       renderizarUsuarios(filtrados);
+    }
 
-      if (termo && filtrados.length > 0) {
-        sugestoesBox.innerHTML = '';
-        filtrados.forEach(u => {
-          const div = document.createElement('div');
-          div.textContent = u.name;
-          div.onclick = () => {
-            inputBusca.value = u.name;
-            sugestoesBox.classList.add('d-none');
-            renderizarUsuarios([u]);
-          };
-          sugestoesBox.appendChild(div);
-        });
-        sugestoesBox.classList.remove('d-none');
-      } else {
-        sugestoesBox.classList.add('d-none');
-      }
-    });
+    document.querySelectorAll('#filtro-nome, #filtro-cidade, #filtro-empresa')
+      .forEach(input => input.addEventListener('input', aplicarFiltros));
 
-    // Esconder sugestões ao clicar fora
-    document.addEventListener('click', function (e) {
-      if (!inputBusca.contains(e.target) && !sugestoesBox.contains(e.target)) {
-        sugestoesBox.classList.add('d-none');
-      }
-    });
+    function exibirDetalhes(u) {
+      document.getElementById('modalContent').innerHTML = `
+        <ul class="list-group">
+          <li class="list-group-item"><strong>Nome:</strong> ${u.name}</li>
+          <li class="list-group-item"><strong>Usuário:</strong> ${u.username}</li>
+          <li class="list-group-item"><strong>Email:</strong> ${u.email}</li>
+          <li class="list-group-item"><strong>Telefone:</strong> ${u.phone}</li>
+          <li class="list-group-item"><strong>Website:</strong> <a href="http://${u.website}" target="_blank">${u.website}</a></li>
+          <li class="list-group-item"><strong>Empresa:</strong> ${u.company.name}</li>
+          <li class="list-group-item"><strong>Endereço:</strong> ${u.address.street}, ${u.address.suite}, ${u.address.city} - ${u.address.zipcode}</li>
+        </ul>`;
+    }
 
-    // Modal de detalhes
-    function exibirDetalhes(usuario) {
-      const modalContent = document.getElementById('modalContent');
-      modalContent.innerHTML = `
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><strong>Nome:</strong> ${usuario.name}</li>
-          <li class="list-group-item"><strong>Usuário:</strong> ${usuario.username}</li>
-          <li class="list-group-item"><strong>Email:</strong> ${usuario.email}</li>
-          <li class="list-group-item"><strong>Telefone:</strong> ${usuario.phone}</li>
-          <li class="list-group-item"><strong>Website:</strong> <a href="http://${usuario.website}" target="_blank">${usuario.website}</a></li>
-          <li class="list-group-item"><strong>Empresa:</strong> ${usuario.company.name}</li>
-          <li class="list-group-item">
-            <strong>Endereço:</strong><br>
-            ${usuario.address.street}, ${usuario.address.suite},<br>
-            ${usuario.address.city} - ${usuario.address.zipcode}
-          </li>
-        </ul>
-      `;
+    function exportarCSV() {
+      const rows = [["ID", "Nome", "Email", "Cidade", "Empresa"]];
+      const nome = document.getElementById('filtro-nome').value.toLowerCase();
+      const cidade = document.getElementById('filtro-cidade').value.toLowerCase();
+      const empresa = document.getElementById('filtro-empresa').value.toLowerCase();
+      todosUsuarios.filter(u =>
+        u.name.toLowerCase().includes(nome) &&
+        u.address.city.toLowerCase().includes(cidade) &&
+        u.company.name.toLowerCase().includes(empresa)
+      ).forEach(u => rows.push([u.id, u.name, u.email, u.address.city, u.company.name]));
+
+      const csv = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+      const encoded = encodeURI(csv);
+      const link = document.createElement("a");
+      link.setAttribute("href", encoded);
+      link.setAttribute("download", "usuarios.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const nome = document.getElementById('filtro-nome').value.toLowerCase();
+      const cidade = document.getElementById('filtro-cidade').value.toLowerCase();
+      const empresa = document.getElementById('filtro-empresa').value.toLowerCase();
+      const data = todosUsuarios.filter(u =>
+        u.name.toLowerCase().includes(nome) &&
+        u.address.city.toLowerCase().includes(cidade) &&
+        u.company.name.toLowerCase().includes(empresa)
+      ).map(u => [u.id, u.name, u.email, u.address.city, u.company.name]);
+      doc.autoTable({
+        head: [["ID", "Nome", "Email", "Cidade", "Empresa"]],
+        body: data
+      });
+      doc.save("usuarios.pdf");
     }
   </script>
-
 </body>
 </html>
