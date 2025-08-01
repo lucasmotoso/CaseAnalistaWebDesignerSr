@@ -1,0 +1,126 @@
+/* Fonte base e tema claro */
+body {
+  font-family: 'Poppins', sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+  background: #e2eaeb; /* ✅ fundo claro com contraste */
+  color: #212529;
+  position: relative;
+}
+
+/* Modo Escuro */
+body.theme-dark {
+  background: #0f0f0f;
+  color: #f1f1f1;
+}
+
+/* Partículas */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.4; /* ✅ visibilidade melhorada */
+  pointer-events: none;
+}
+
+/* Cartões */
+.card {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); /* ✅ sombra sutil */
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+body.theme-dark .card {
+  background-color: #1f1f1f;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.card-footer {
+  background: transparent;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.theme-dark .card-footer {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Botões */
+.btn-custom {
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  transform: scale(1.05);
+}
+
+/* Inputs */
+.form-control {
+  min-width: 150px;
+}
+
+/* Rodapé */
+footer {
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  background-color: #e9ecef;
+  border-top: 1px solid #dee2e6;
+  color: #6c757d;
+}
+
+body.theme-dark footer {
+  background-color: #121212;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #aaaaaa;
+}
+
+/* Estrelas */
+.bi-star,
+.bi-star-fill {
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+/* Spinner */
+#loading .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+/* Header personalizado para modo claro */
+.header-gradient {
+  background: linear-gradient(135deg, #95d7e2, #1d7f8b); /* um tom mais claro que o body */
+  color: #fff;
+  border-bottom: 4px solid #4fa2ae;
+}
+
+/* Header no modo escuro */
+body.theme-dark .header-gradient {
+  background: linear-gradient(135deg, #05063b, #2478e6);
+  border-color: #e5ebea;
+  color: #fff;
+}
+/* === Glassmorphism (somente tema claro) === */
+body:not(.theme-dark) .header-gradient,
+body:not(.theme-dark) .card {
+  background: rgba(5, 57, 87, 0.425);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Mantém texto escuro no tema claro */
+body:not(.theme-dark) .card,
+body:not(.theme-dark) .header-gradient {
+  color: #212529;
+}
